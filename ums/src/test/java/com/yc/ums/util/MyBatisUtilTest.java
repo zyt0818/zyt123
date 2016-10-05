@@ -10,5 +10,9 @@ public class MyBatisUtilTest {
 	public void testGetSession() {
 		assertNotNull(MyBatisUtil.getSession().getConnection());
 	}
+	@Test
+	public void yyt() {
+		assertNotNull(MyBatisUtil.getSession().getConnection());
+	}
 
 }
