@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间是映射接口的全类名 -->
+<mapper namespace="com.yc.ums.mapper.ProfileMapper">
+	<select id="getAll" resultType="Profile">
+		select * from profile 
+	</select>
+	<select id="get" parameterType="int" resultType="Profile">
+		select * from
+		profile where id=#{id}
+	</select>
+	<update id="updateProfile" parameterType="Profile">
+
+	update profile set name=#{name},birthday=#{birthday},gender=#{gender},career=#{career},address=#{address},mobile=#{mobile} where id=#{id}
+	</update>
+	
+	
+	
+	
+	<!-- 分页操作 -->
+	<resultMap type="ProfileBean" id="ProfileBeanMap">
+		<result column="pageSize" property="pageSize"/>
+		<result column="currPage" property="currPage"/>
+		<collection property="rows" column="{pageSize=pageSize,currPage=currPage}" ofType="Profile" select="getPagationUsers">
+			
+		</collection>
+	</resultMap>
+	<select id="getPartProfile" parameterType="ProfileBean" resultMap="ProfileBeanMap">
+		select ceil(count(1)) total,#{pageSize} pageSize,#{currPage} currPage from profile
+	</select>
+	<select id="getPagationUsers" resultType="Profile">
+		select 
+		u.* from
+		
+		(select n.*,rownum rn from
+		(select * from profile) n where
+		#{currPage} * #{pageSize}>=rownum) u
+		where rn>(#{currPage}-1)*#{pageSize}
+		
+		<!-- select
+		* from
+		(select n.*,rownum rn from
+		(select * from users) n where
+		#{end}>=rownum)
+		where rn>#{start} -->
+	</select>
+
+</mapper>
